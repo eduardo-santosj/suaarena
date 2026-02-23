@@ -31,7 +31,17 @@ export const DialogReserva = ({
   const { data: quadrasData, isLoading: isLoadingQuadras } = useQuadras();
   
   const quadras = quadrasData?.data || [];
-  const [reservaForm, setReservaForm] = useState({
+  const [reservaForm, setReservaForm] = useState<{
+    quadra_id: string;
+    data_reserva: string;
+    hora_inicio: string;
+    hora_fim: string;
+    descricao: string;
+    valor: string;
+    tipo_recorrencia: string;
+    dias_semana: number[];
+    data_fim: string;
+  }>({
     quadra_id: '',
     data_reserva: '',
     hora_inicio: '',

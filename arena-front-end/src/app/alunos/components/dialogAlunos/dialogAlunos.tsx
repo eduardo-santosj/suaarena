@@ -87,12 +87,12 @@ export const DialogAlunos = ({
   }) || []
 
   const sendFormAluno = (
-    event: ChangeEvent<HTMLInputElement> | boolean | string,
+    event: ChangeEvent<HTMLInputElement> | boolean | string | null,
     input: string,
   ) => {
     let value;
     console.log(event, input);
-    if (typeof event === 'boolean' || typeof event === 'string') {
+    if (typeof event === 'boolean' || typeof event === 'string' || event === null) {
       value = event;
     } else {
       value = event.target.value;

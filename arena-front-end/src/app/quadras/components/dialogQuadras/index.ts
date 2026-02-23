@@ -1,0 +1,1 @@
+export { DialogQuadras } from './dialogQuadras';

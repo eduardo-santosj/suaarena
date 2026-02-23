@@ -1,0 +1,63 @@
+image: node:20.18.0
+
+pipelines:
+  default:
+    - step:
+        name: Build
+        caches:
+          - node
+        script:
+          - echo "🔹 Criando .env de production..."
+          - echo "NEXT_PUBLIC_API_BASE_URL=$URL_DNS" > .env.production
+          - echo "✅ .env.production criado"
+          
+          - echo "🔹 Iniciando build..."
+          - npm ci
+          - echo "✅ Dependências instaladas"
+          - npm run lint
+          - echo "✅ Lint ok"
+          - npm run build
+          - echo "✅ Build concluído"
+        artifacts:
+          - .next/**
+          - build/**
+          - public/**
+          - package.json
+          - package-lock.json
+
+    - step:
+        name: Deploy to AWS EC2
+        deployment: production
+        script:
+          # Instala rsync e ssh-client
+          - echo "🔹 Instalando rsync e ssh-client..."
+          - apt-get update && apt-get install -y rsync openssh-client
+          - echo "✅ Pacotes instalados"
+
+          # Adiciona fingerprint da EC2 no known_hosts
+          - mkdir -p ~/.ssh
+          - echo "🔹 Registrando EC2 no known_hosts..."
+          - ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+          - echo "✅ known_hosts atualizado"
+
+          # Teste de conexão SSH
+          - echo "🔹 Testando conexão SSH com EC2..."
+          - ssh -o BatchMode=yes ubuntu@$EC2_HOST "echo '✅ Conexão SSH OK!'"
+
+          # Envia arquivos buildados para a EC2 via rsync
+          - echo "🔹 Enviando arquivos para EC2 via rsync..."
+          - rsync -avz --delete --exclude=node_modules --exclude=.git ./ ubuntu@$EC2_HOST:/home/ubuntu/arena-front-end/
+          - echo "✅ Arquivos enviados"
+
+          # Executa comandos remotos na EC2
+          - echo "🔹 Executando comandos na EC2..."
+          - ssh ubuntu@$EC2_HOST "
+              echo '🔹 Entrou na EC2'
+              cd ~/arena-front-end &&
+              echo '🔹 Diretório arena-front-end'
+              npm ci --only=production &&
+              echo '✅ Dependências de produção instaladas'
+              pm2 restart arena-front-end || pm2 start npm --name arena-front-end -- start &&
+              echo '✅ PM2 atualizado'
+            "
+

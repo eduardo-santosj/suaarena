@@ -1,0 +1,1 @@
+export { DialogPlanos } from './dialogPlanos';

@@ -1,1 +1,0 @@
-ALTER TABLE Turmas ADD COLUMN dias_semana JSON DEFAULT NULL;

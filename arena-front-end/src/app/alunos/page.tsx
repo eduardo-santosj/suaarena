@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Switch } from '@/components/ui/switch';
 import { useAlert } from '@/hooks/useAlerts';
+import { useAuth } from '@/hooks/useAuth';
 import { Aluno } from '@/types/model/alunos';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit2, PlusCircle } from 'lucide-react';
@@ -27,6 +28,7 @@ type InfoDialogClient = {
 
 export default function AlunosPage() {
   const alert = useAlert();
+  const { canEdit } = useAuth();
 
   const [filtros, setFiltros] = useState({ nome: '', status: '', idTurma: '', perPage: 20 });
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,6 +133,7 @@ const updateStatus = useCallback((alunoId: string, updatedAlunoResult: Partial<A
         ),
         cell: ({ row }) => {
           const toggleStatus = () => {
+            if (!canEdit()) return;
             updateStatus(row.original.id.toString(), { status: row.original.status === 1 ? 0 : 1 });
           };
           return (
@@ -139,6 +142,7 @@ const updateStatus = useCallback((alunoId: string, updatedAlunoResult: Partial<A
                 id={`switch-${row.original.id}`}
                 checked={Boolean(row.original.status)}
                 onCheckedChange={toggleStatus}
+                disabled={!canEdit()}
                 className='data-[state=checked]:bg-newyellow'
               />
             </span>

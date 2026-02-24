@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAlert } from '@/hooks/useAlerts';
+import { useAuth } from '@/hooks/useAuth';
 import { useQuadras } from '@/api/quadras/useQuadras';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from 'lucide-react';
@@ -27,6 +28,7 @@ export const DialogReserva = ({
   onReservaCreated,
 }: DialogReservaProps) => {
   const alert = useAlert();
+  const { canEdit } = useAuth();
   const queryClient = useQueryClient();
   const { data: quadrasData, isLoading: isLoadingQuadras } = useQuadras();
   
@@ -334,9 +336,9 @@ export const DialogReserva = ({
             Cancelar
           </Button>
           <Button
-            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${isPending && 'cursor-not-allowed opacity-75'}`}
+            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${(isPending || !canEdit()) && 'cursor-not-allowed opacity-75'}`}
             onClick={sendInfoReserva}
-            disabled={!needThisInformation || isPending}
+            disabled={!needThisInformation || isPending || !canEdit()}
           >
             {isPending && <Loader className='animate-spin w-4 h-4'/>}
             {!isPending && <>Criar Reserva</>}

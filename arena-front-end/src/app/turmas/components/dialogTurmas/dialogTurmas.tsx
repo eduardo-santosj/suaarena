@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useTurmaNew } from '@/api/alunos/useNewTurma';
 import { useAlert } from '@/hooks/useAlerts';
+import { useAuth } from '@/hooks/useAuth';
 import { Turma } from '@/types/model/turma';
 import { Loader } from 'lucide-react';
 
@@ -28,6 +29,7 @@ export const DialogTurmas = ({
   onCloseAction,
 }: DialogTurmasProps) => {
   const alert = useAlert();
+  const { canEdit } = useAuth();
   const [turmaForm, setTurmaForm] = useState<Omit<Turma, 'id'>>({
     nome: turmaEdit?.nome || '',
     horario: turmaEdit?.horario || '',
@@ -162,9 +164,9 @@ export const DialogTurmas = ({
             Cancelar
           </Button>
           <Button
-            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${isPendingNew && 'cursor-not-allowed opacity-75'}`}
+            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${(isPendingNew || !canEdit()) && 'cursor-not-allowed opacity-75'}`}
             onClick={sendInfoTurma}
-            disabled={!needThisInformation}
+            disabled={!needThisInformation || !canEdit()}
           >
             {isPendingNew && <Loader className='animate-spin w-4 h-4'/>}
             {!isPendingNew && <>Salvar</>}

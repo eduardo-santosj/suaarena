@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 interface DecodedToken {
   id: number;
   username: string;
-  userType: 'admin' | 'teacher' | 'student' | 'finance';
+  userType: 'admin' | 'teacher' | 'student' | 'finance' | 'viewer' | 'pending';
 }
 
 export const useAuth = () => {
@@ -36,6 +36,8 @@ export const useAuth = () => {
   const isTeacher = () => user?.userType === 'teacher';
   const isStudent = () => user?.userType === 'student';
   const isFinance = () => user?.userType === 'finance';
+  const isViewer = () => user?.userType === 'viewer';
+  const canEdit = () => user?.userType !== 'viewer';
 
   return {
     user,
@@ -44,6 +46,8 @@ export const useAuth = () => {
     isAdmin,
     isTeacher,
     isStudent,
-    isFinance
+    isFinance,
+    isViewer,
+    canEdit
   };
 };

@@ -80,7 +80,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 Início
               </Button>
 
-              {hasPermission(['admin', 'teacher']) && (
+              {hasPermission(['admin', 'teacher', 'viewer']) && (
                 <>
                   <Button
                     variant="ghost"
@@ -125,7 +125,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 </>
               )}
 
-              {hasPermission(['admin']) && (
+              {hasPermission(['admin', 'viewer']) && (
                 <>
                   <div>
                     <Button
@@ -192,7 +192,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 </Button>
               )}
 
-              {hasPermission(['admin', 'finance']) && (
+              {hasPermission(['admin', 'finance', 'viewer']) && (
                 <Button
                   variant="ghost"
                   className={`w-full justify-start ${

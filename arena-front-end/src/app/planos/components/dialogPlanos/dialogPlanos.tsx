@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useAlert } from '@/hooks/useAlerts';
+import { useAuth } from '@/hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from 'lucide-react';
 
@@ -33,6 +34,7 @@ export const DialogPlanos = ({
   onCloseAction,
 }: DialogPlanosProps) => {
   const alert = useAlert();
+  const { canEdit } = useAuth();
   const queryClient = useQueryClient();
   const [planoForm, setPlanoForm] = useState({
     nome: planoEdit?.nome || '',
@@ -128,9 +130,9 @@ export const DialogPlanos = ({
             Cancelar
           </Button>
           <Button
-            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${isPending && 'cursor-not-allowed opacity-75'}`}
+            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${(isPending || !canEdit()) && 'cursor-not-allowed opacity-75'}`}
             onClick={sendInfoPlano}
-            disabled={!needThisInformation || isPending}
+            disabled={!needThisInformation || isPending || !canEdit()}
           >
             {isPending && <Loader className='animate-spin w-4 h-4'/>}
             {!isPending && <>Salvar</>}

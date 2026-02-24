@@ -23,6 +23,7 @@ import { SelectPlano } from '@/components/selectPlanos';
 import { Calendar } from '@/components/ui/calendar';
 import { Switch } from '@/components/ui/switch';
 import { useAlert } from '@/hooks/useAlerts';
+import { useAuth } from '@/hooks/useAuth';
 import { Aluno } from '@/types/model/alunos';
 import { Turma } from '@/types/model/turma';
 import { Loader } from 'lucide-react';
@@ -47,6 +48,7 @@ export const DialogAlunos = ({
   planos,
 }: EditClientDialogProps) => {
   const alert = useAlert();
+  const { canEdit } = useAuth();
   const [alunoForm, setalunoForm] = useState<Aluno>(
     userEdit || {
       id: 0,
@@ -281,9 +283,9 @@ export const DialogAlunos = ({
             Cancelar
           </Button>
           <Button
-            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${(isPendingNew || isPendingUpdate) && 'cursor-not-allowed opacity-75'}`}
+            className={`p-2 rounded-md bg-newyellow text-black font-medium text-sm [&:hover]:bg-newyellow-hover [&:hover]:text-white [&:focus]:!bg-newyellow-focus [&:focus]:text-black ${(isPendingNew || isPendingUpdate || !canEdit()) && 'cursor-not-allowed opacity-75'}`}
             onClick={() => sendInfoAluno()}
-            disabled={!needThisInformation}
+            disabled={!needThisInformation || !canEdit()}
           >
             {(isPendingNew || isPendingUpdate) && (
               <Loader className='animate-spin w-4 h-4'/>

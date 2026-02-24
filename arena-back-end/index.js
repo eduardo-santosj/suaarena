@@ -28,6 +28,7 @@ const checkinRoutes = require('./routes/checkin');
 const dashboardRoutes = require('./routes/dashboard');
 const usuariosRoutes = require('./routes/usuarios');
 const planosRoutes = require('./routes/planos');
+const migrateRoutes = require('./routes/migrate');
 const quadrasRoutes = require('./routes/quadras');
 
 app.get('/', (req, res) => {
@@ -44,6 +45,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/planos', planosRoutes);
 app.use('/api/quadras', quadrasRoutes);
 app.use('/api/perfil', require('./routes/perfil'));
+app.use('/api/migrate', migrateRoutes);
 
 const PORT = process.env.PORT || 3008;
 app.listen(PORT, () => console.log(`Backend rodando na porta ${PORT}`));

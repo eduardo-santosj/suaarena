@@ -6,3 +6,8 @@
 node_modules/
 .DS_Store
 *.log
+APRESENTACAO_EXECUTIVA.md
+PROPOSTA_COMERCIAL_SUA_ARENA.md
+criar_admin_via_backend.js
+gerar_hash.js
+gerar_hash_admin.js
